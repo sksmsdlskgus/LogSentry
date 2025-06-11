@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ## log 테스트용
-.logs/
+logs/
