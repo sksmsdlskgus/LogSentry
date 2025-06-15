@@ -35,6 +35,7 @@ dependencies {
 	implementation 'ch.qos.logback:logback-classic'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
 	// Apache POI - Excel 파일 처리를 위한 기본 라이브러리
 	// implementation 'org.apache.poi:poi:5.2.3'
