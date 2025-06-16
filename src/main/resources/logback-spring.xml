@@ -62,6 +62,11 @@
         </encoder>
     </appender>
 
+    <!-- heartbeat 전용 로그만 DEBUG 레벨 적용 -->
+    <logger name="heartbeatLogger" level="DEBUG" additivity="false">
+        <appender-ref ref="TEXT_FILE"/>
+        <appender-ref ref="JSON_FILE"/>
+    </logger>
 
     <!-- Root Logger: 전체 로그 레벨과 사용할 Appender를 지정 -->
     <root level="INFO">
