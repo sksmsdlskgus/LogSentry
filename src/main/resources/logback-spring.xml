@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!-- Console Appender: 로그를 콘솔에 출력하기 위한 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 로그 출력 형식을 지정
+                 %d: 날짜시간
+                 %thread: 스레드 이름
+                 %-5level: 로그 레벨
+                 %logger{36}: 로거 이름(최대 36자)
+                 %msg: 로그 메시지
+                 %n: 줄바꿈 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender: 로그를 파일에 저장하기 위한 설정 -->
+    <appender name="TEXT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/text/client-requests.log</file>
+        <!-- 로그 파일 롤링 정책을 설정 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 날짜별로 로그 파일을 생성 -->
+            <fileNamePattern>${LOG_PATH}/text/client-requests.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 최대 30일간의 로그 파일을 보관 -->
+            <maxHistory>30</maxHistory>
+            <!-- 전체 로그 파일 크기를 최대 3GB로 제한 -->
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <!-- Console Appender와 동일한 출력 형식을 사용 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- JSON File Appender: 분석용 (ELK 연동) -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/json/app-log.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 테스트용 분단위 기록 -->
+            <!--<fileNamePattern>${LOG_PATH}/json/app-log.%d{yyyy-MM-dd_HH-mm}.json</fileNamePattern>-->
+            <fileNamePattern>${LOG_PATH}/json/app-log.%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <pattern>
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "logger": "%logger",
+                        "thread": "%thread",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+                <mdc />
+                <stackTrace />
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- heartbeat 전용 로그만 DEBUG 레벨 적용 -->
+    <logger name="heartbeatLogger" level="DEBUG" additivity="false">
+        <appender-ref ref="TEXT_FILE"/>
+        <appender-ref ref="JSON_FILE"/>
+    </logger>
+
+    <!-- Root Logger: 전체 로그 레벨과 사용할 Appender를 지정 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="TEXT_FILE"/>
+        <appender-ref ref="JSON_FILE"/>
+    </root>
+</configuration>
