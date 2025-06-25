@@ -14,7 +14,8 @@
                  %n: 줄바꿈 -->
             <pattern>
                 %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}
-                [traceId:%X{traceId}] [userId:%X{userId}] [uri:%X{uri}] [method:%X{method}] [ip:%X{clientIp}]
+                [traceId:%X{traceId}] [timestamp:%X{timestamp}] [userId:%X{userId}]
+                [uri:%X{uri}] [method:%X{method}] [ip:%X{clientIp}] [agent:%X{userAgent}]
                 - %msg%n
             </pattern>
         </encoder>
@@ -33,11 +34,11 @@
             <totalSizeCap>3GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
-            <!-- Console Appender와 동일한 출력 형식을 사용 -->
+            <!-- 엑셀 저장용으로 완전한 Key-Value 나열 or 구분자 기반 구조 사용 -->
             <pattern>
-                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}
-                [traceId:%X{traceId}] [userId:%X{userId}] [uri:%X{uri}] [method:%X{method}] [ip:%X{clientIp}]
-                - %msg%n
+                timestamp=%X{timestamp}, traceId=%X{traceId}, userId=%X{userId},
+                uri=%X{uri}, method=%X{method}, clientIp=%X{clientIp}, userAgent=%X{userAgent},
+                level=%level, logger=%logger{36}, thread=%thread, message=%msg%n
             </pattern>
         </encoder>
     </appender>
@@ -54,16 +55,10 @@
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <timestamp />
-                <pattern>
-                    <pattern>
-                        {
-                        "level": "%level",
-                        "logger": "%logger",
-                        "thread": "%thread",
-                        "message": "%message"
-                        }
-                    </pattern>
-                </pattern>
+                <logLevel />
+                <loggerName />
+                <threadName />
+                <message />
                 <mdc />
                 <stackTrace />
             </providers>
