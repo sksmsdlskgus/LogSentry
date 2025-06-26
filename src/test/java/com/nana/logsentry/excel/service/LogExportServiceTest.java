@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("LogAnalyzerService 단위 테스트")
-class LogAnalyzerServiceTest {
+class LogExportServiceTest {
     // <메서드명>_should<기대 결과>_when<조건>
 
-    private final LogAnalyzerService service = new LogAnalyzerService();
+    private final LogExportService service = new LogExportService();
     private final LogParser parser = new LogParser();
 
     @Test

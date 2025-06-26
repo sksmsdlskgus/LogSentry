@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class LogAnalyzerService {
+public class LogExportService {
 
     private final LogParser parser = new LogParser();
 
@@ -133,4 +133,7 @@ public class LogAnalyzerService {
             row.createCell(1).setCellValue(entry.getValue());
         }
     }
+
+
+
 }
