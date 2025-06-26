@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,7 +78,7 @@ public class LogExportService {
             int rowNum = 1;
             for (LogEntry entry : entries) {
                 Row row = detailSheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(entry.getTimestamp());
+                row.createCell(0).setCellValue(entry.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 row.createCell(1).setCellValue(entry.getLevel());
                 row.createCell(2).setCellValue(entry.getTraceId());
                 row.createCell(3).setCellValue(entry.getUserId());
@@ -106,7 +107,7 @@ public class LogExportService {
             }
 
             // 파일로 저장
-            String fileName = String.format("logs/client-requests-%s.xlsx", date);
+            String fileName = String.format("logs/excel/client-requests-%s.xlsx", date);
             try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
                 workbook.write(fileOut);
             }
