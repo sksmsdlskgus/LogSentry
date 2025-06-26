@@ -18,7 +18,6 @@ public class LogParser {
 
     private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
     // line 로그 한 줄을 LogEntry 객체로 파싱
     public LogEntry parse(String line) {
         Matcher matcher = LOG_PATTERN.matcher(line);

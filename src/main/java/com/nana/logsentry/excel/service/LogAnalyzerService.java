@@ -9,18 +9,13 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.regex.*;
 import java.util.stream.Collectors;
 
 @Service
 public class LogAnalyzerService {
 
     private final LogParser parser = new LogParser();
-
-    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // 지정된 날짜의 로그 파일을 파싱하여 LogEntry 리스트로 반환
     public List<LogEntry> parseLogFile(String date) {
