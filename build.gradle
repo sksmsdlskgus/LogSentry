@@ -41,10 +41,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// Apache POI - Excel 파일 처리를 위한 기본 라이브러리
-	// implementation 'org.apache.poi:poi:5.2.3'
+	implementation 'org.apache.poi:poi:5.2.3'
 
 	// Apache POI OOXML - .xlsx 형식의 Excel 파일 처리를 위한 확장 라이브러리
-	// implementation 'org.apache.poi:poi-ooxml:5.2.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 }
 
 tasks.named('test') {
