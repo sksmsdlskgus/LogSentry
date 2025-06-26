@@ -62,7 +62,38 @@ public class LogExportController {
         return analysis;
     }
 
+    @Operation(summary = "Excel 로그 다운로드", description = "지정된 날짜의 로그 데이터를 Excel(.xlsx) 파일로 다운로드합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "파일 다운로드 성공"),
+            @ApiResponse(responseCode = "500", description = "파일 생성 또는 다운로드 실패")
+    })
+    @GetMapping("/download/{date}")
+    public ResponseEntity<Resource> downloadExcel(@PathVariable(name = "date") String date) {
+        try {
+            List<LogEntry> entries = logExportService.parseLogFile(date);
 
+            // 디렉토리 생성 (없으면 생성)
+            Path directory = Paths.get("logs/excel");
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
+            }
+
+            logExportService.exportToExcel(entries, date);
+
+            Path file = Paths.get("logs/excel/client-requests-" + date + ".xlsx");
+            Resource resource = new UrlResource(file.toUri());
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"client-requests-" + date + ".xlsx\"")
+                    .body(resource);
+
+        } catch (MalformedURLException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 파일 경로", e);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 처리 중 오류 발생", e);
+        }
+    }
 
 
 }
