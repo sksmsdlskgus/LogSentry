@@ -1,5 +1,6 @@
 package com.nana.logsentry.excel.service;
 
+import com.nana.logsentry.excel.parser.LogParser;
 import com.nana.logsentry.model.LogEntry;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -17,11 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class LogAnalyzerService {
 
-    private static final Pattern LOG_PATTERN = Pattern.compile(
-            "timestamp=(.*?), traceId=(.*?), userId=(.*?),\\s*" +
-                    "uri=(.*?), method=(.*?), clientIp=(.*?), userAgent=(.*?), " +
-                    "level=(.*?), logger=(.*?), thread=(.*?), message=(.*)"
-    );
+    private final LogParser parser = new LogParser();
 
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -36,31 +33,12 @@ public class LogAnalyzerService {
 
         try {
             return Files.lines(logPath)
-                    .map(this::parseLine)
+                    .map(parser::parse)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("로그 파일 읽기 실패: " + logFile, e);
         }
-    }
-
-    // @param line 로그 한 줄을 LogEntry 객체로 파싱
-    private LogEntry parseLine(String line) {
-        Matcher matcher = LOG_PATTERN.matcher(line);
-        if (matcher.find()) {
-            return new LogEntry(
-                    LocalDateTime.parse(matcher.group(1), DATE_TIME_FORMAT), // timestamp
-                    matcher.group(8).trim(), // level
-                    matcher.group(2).trim(), // traceId
-                    matcher.group(3).trim(), // userId
-                    matcher.group(4).trim(), // uri
-                    matcher.group(5).trim(), // method
-                    matcher.group(6).trim(), // clientIp
-                    matcher.group(7).trim(), // userAgent
-                    matcher.group(11).trim() // message
-            );
-        }
-        return null;  // 파싱 실패 시 null
     }
 
     // 어떤 IP가 얼마나 요청했는지
