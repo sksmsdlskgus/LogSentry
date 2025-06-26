@@ -63,4 +63,23 @@ public class LogAnalyzerService {
         return null;  // 파싱 실패 시 null
     }
 
+    // 어떤 IP가 얼마나 요청했는지
+    public Map<String, Long> getRequestsByIp(List<LogEntry> entries) {
+        return entries.stream()
+                .collect(Collectors.groupingBy(LogEntry::getClientIp, Collectors.counting()));
+    }
+
+    // 어떤 API가 많이 호출됐는지
+    public Map<String, Long> getRequestsByUri(List<LogEntry> entries) {
+        return entries.stream()
+                .collect(Collectors.groupingBy(LogEntry::getUri, Collectors.counting()));
+    }
+
+    // GET/POST 분포 확인
+    public Map<String, Long> getRequestsByMethod(List<LogEntry> entries) {
+        return entries.stream()
+                .collect(Collectors.groupingBy(LogEntry::getMethod, Collectors.counting()));
+    }
+
+
 }
