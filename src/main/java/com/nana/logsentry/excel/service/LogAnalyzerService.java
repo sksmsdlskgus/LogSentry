@@ -81,5 +81,83 @@ public class LogAnalyzerService {
                 .collect(Collectors.groupingBy(LogEntry::getMethod, Collectors.counting()));
     }
 
+    // 로그 항목 리스트를 기반으로 요청 상세 시트 및 통계 시트를 포함한 Excel 파일을 생성
+    public void exportToExcel(List<LogEntry> entries, String date) {
+        try (Workbook workbook = new XSSFWorkbook()) {
 
+            // 요청 상세 시트 생성
+            Sheet detailSheet = workbook.createSheet("요청 상세");
+
+            // 헤더 작성
+            Row headerRow = detailSheet.createRow(0);
+            headerRow.createCell(0).setCellValue("시간");
+            headerRow.createCell(1).setCellValue("Level");
+            headerRow.createCell(2).setCellValue("Trace ID");
+            headerRow.createCell(3).setCellValue("User ID");
+            headerRow.createCell(4).setCellValue("URI");
+            headerRow.createCell(5).setCellValue("Method");
+            headerRow.createCell(6).setCellValue("IP");
+            headerRow.createCell(7).setCellValue("User-Agent");
+            headerRow.createCell(8).setCellValue("Message");
+
+            // 데이터 행 추가
+            int rowNum = 1;
+            for (LogEntry entry : entries) {
+                Row row = detailSheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(entry.getTimestamp());
+                row.createCell(1).setCellValue(entry.getLevel());
+                row.createCell(2).setCellValue(entry.getTraceId());
+                row.createCell(3).setCellValue(entry.getUserId());
+                row.createCell(4).setCellValue(entry.getUri());
+                row.createCell(5).setCellValue(entry.getMethod());
+                row.createCell(6).setCellValue(entry.getClientIp());
+                row.createCell(7).setCellValue(entry.getUserAgent());
+                row.createCell(8).setCellValue(entry.getMessage());
+            }
+
+            // 통계 시트 생성
+            Sheet statsSheet = workbook.createSheet("통계");
+
+            // 각 통계 섹션 삽입
+            createStatisticsSection(statsSheet, 0, "IP별 요청 수", getRequestsByIp(entries));
+            createStatisticsSection(statsSheet, getRequestsByIp(entries).size() + 2,
+                    "URI별 요청 수", getRequestsByUri(entries));
+            createStatisticsSection(statsSheet,
+                    getRequestsByIp(entries).size() + getRequestsByUri(entries).size() + 4,
+                    "메소드별 요청 수", getRequestsByMethod(entries));
+
+            // 자동 컬럼 크기 조정
+            for (int i = 0; i < 9; i++) {
+                detailSheet.autoSizeColumn(i);
+                statsSheet.autoSizeColumn(i);
+            }
+
+            // 파일로 저장
+            String fileName = String.format("logs/client-requests-%s.xlsx", date);
+            try (FileOutputStream fileOut = new FileOutputStream(fileName)) {
+                workbook.write(fileOut);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("엑셀 파일 생성 실패", e);
+        }
+    }
+
+    // 대상 시트, 시작 행 번호, 섹션 제목, 통계 데이터 맵 삽입 <통계 데이터>
+    private void createStatisticsSection(Sheet sheet, int startRow, String title,
+                                         Map<String, Long> data) {
+        Row titleRow = sheet.createRow(startRow);
+        titleRow.createCell(0).setCellValue(title);
+
+        Row headerRow = sheet.createRow(startRow + 1);
+        headerRow.createCell(0).setCellValue("구분");
+        headerRow.createCell(1).setCellValue("요청 수");
+
+        int rowNum = startRow + 2;
+        for (Map.Entry<String, Long> entry : data.entrySet()) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(entry.getKey());
+            row.createCell(1).setCellValue(entry.getValue());
+        }
+    }
 }
