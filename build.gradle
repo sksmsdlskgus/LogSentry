@@ -46,6 +46,9 @@ dependencies {
 
 	// Apache POI OOXML - .xlsx 형식의 Excel 파일 처리를 위한 확장 라이브러리
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+	// Swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 }
 
 tasks.named('test') {
