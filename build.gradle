@@ -30,6 +30,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.10.0'
 
 	// Logback - 로깅을 위한 구현체 라이브러리
 	implementation 'ch.qos.logback:logback-classic'
@@ -41,10 +42,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// Apache POI - Excel 파일 처리를 위한 기본 라이브러리
-	// implementation 'org.apache.poi:poi:5.2.3'
+	implementation 'org.apache.poi:poi:5.2.3'
 
 	// Apache POI OOXML - .xlsx 형식의 Excel 파일 처리를 위한 확장 라이브러리
-	// implementation 'org.apache.poi:poi-ooxml:5.2.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+	// Swagger http://localhost:8081/swagger-ui/index.html
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 }
 
 tasks.named('test') {

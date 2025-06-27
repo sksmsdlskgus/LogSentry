@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/logs")
-public class LogAnalyzerController {
+public class LoggingController {
 
-    private static final Logger log = LoggerFactory.getLogger(LogAnalyzerController.class);
+    private static final Logger log = LoggerFactory.getLogger(LoggingController.class);
 
     @GetMapping("/test")
     public String testLogging() {
