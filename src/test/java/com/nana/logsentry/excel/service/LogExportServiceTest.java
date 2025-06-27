@@ -1,6 +1,6 @@
 package com.nana.logsentry.excel.service;
 
-import com.nana.logsentry.excel.parser.LogParser;
+import com.nana.logsentry.util.parser.LogParserUtils;
 import com.nana.logsentry.model.LogEntry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class LogExportServiceTest {
     // <메서드명>_should<기대 결과>_when<조건>
 
     private final LogExportService service = new LogExportService();
-    private final LogParser parser = new LogParser();
+    private final LogParserUtils parser = new LogParserUtils();
 
     @Test
     @DisplayName("유효한 로그 라인 파싱 시 LogEntry 객체 반환")
