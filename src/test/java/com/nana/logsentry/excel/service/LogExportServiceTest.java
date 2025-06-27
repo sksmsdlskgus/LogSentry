@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("LogAnalyzerService 단위 테스트")
+@DisplayName("LogExportService 단위 테스트")
 class LogExportServiceTest {
     // <메서드명>_should<기대 결과>_when<조건>
 
