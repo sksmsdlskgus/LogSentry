@@ -33,12 +33,7 @@ public class LogAnalyzerService {
 
     // TOP5 요청 IP 조회 (30일 기준으로 5개 가져오기)
     public List<TopIpStatDto> getTopLogIp(LocalDate baseDate) {
-        List<LogEntry> allEntries = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            LocalDate date = baseDate.minusDays(i);
-            allEntries.addAll(parseLogEntries(date.toString()));
-        }
+        List<LogEntry> allEntries = collectEntriesForPastDays(baseDate, 30);
 
         return allEntries.stream()
                 .collect(Collectors.groupingBy(LogEntry::getClientIp, Collectors.counting()))
@@ -51,12 +46,7 @@ public class LogAnalyzerService {
 
     // TOP5 요청 URI 조회 (30일 기준으로 5개 가져오기)
     public List<TopUriStatDto> getTopLogUri(LocalDate baseDate) {
-        List<LogEntry> allEntries = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            LocalDate date = baseDate.minusDays(i);
-            allEntries.addAll(parseLogEntries(date.toString()));
-        }
+        List<LogEntry> allEntries = collectEntriesForPastDays(baseDate, 30);
 
         return allEntries.stream()
                 .collect(Collectors.groupingBy(LogEntry::getUri, Collectors.counting()))
@@ -81,6 +71,16 @@ public class LogAnalyzerService {
         } catch (IOException e) {
             throw new RuntimeException("로그 디렉토리 조회 실패: " + LOG_DIR, e);
         }
+    }
+
+    // 날짜 기준으로 30일 조회
+    private List<LogEntry> collectEntriesForPastDays(LocalDate baseDate, int days) {
+        List<LogEntry> entries = new ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            LocalDate date = baseDate.minusDays(i);
+            entries.addAll(parseLogEntries(date.toString()));
+        }
+        return entries;
     }
 
     // 파싱할 경로 날짜 조회
