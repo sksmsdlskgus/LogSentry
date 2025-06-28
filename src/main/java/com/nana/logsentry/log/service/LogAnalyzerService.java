@@ -1,6 +1,7 @@
 package com.nana.logsentry.log.service;
 
 import com.nana.logsentry.log.dto.TopIpStatDto;
+import com.nana.logsentry.log.dto.TopUriStatDto;
 import com.nana.logsentry.model.LogEntry;
 import com.nana.logsentry.util.parser.LogParserUtils;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,24 @@ public class LogAnalyzerService {
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(5)
                 .map(e -> new TopIpStatDto(e.getKey(), Math.toIntExact(e.getValue())))
+                .collect(Collectors.toList());
+    }
+
+    // TOP5 요청 URI 조회 (30일 기준으로 5개 가져오기)
+    public List<TopUriStatDto> getTopLogUri(LocalDate baseDate) {
+        List<LogEntry> allEntries = new ArrayList<>();
+
+        for (int i = 0; i < 30; i++) {
+            LocalDate date = baseDate.minusDays(i);
+            allEntries.addAll(parseLogEntries(date.toString()));
+        }
+
+        return allEntries.stream()
+                .collect(Collectors.groupingBy(LogEntry::getUri, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(5)
+                .map(e -> new TopUriStatDto(e.getKey(), Math.toIntExact(e.getValue())))
                 .collect(Collectors.toList());
     }
 
