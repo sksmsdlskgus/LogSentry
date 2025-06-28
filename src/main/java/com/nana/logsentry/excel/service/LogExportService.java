@@ -24,7 +24,7 @@ public class LogExportService {
         Path logPath = Paths.get(logFile);
 
         if (!Files.exists(logPath)) {
-            return new ArrayList<>(); // 해당 날짜의 로그 파일이 없으면 빈 리스트 반환
+            return Collections.emptyList(); // 해당 날짜의 로그 파일이 없으면 빈 리스트 반환
         }
 
         try {
