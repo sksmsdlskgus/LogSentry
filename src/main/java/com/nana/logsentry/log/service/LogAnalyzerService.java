@@ -17,11 +17,34 @@ import java.util.stream.Collectors;
 @Service
 public class LogAnalyzerService {
 
-    private final LogParserUtils parser = new LogParserUtils();
+    private final LogParserUtils parser;
+    private final String logDir;
 
-    private static final String LOG_DIR = "logs/text";
     private static final String LOG_PREFIX = "client-requests.";
     private static final String LOG_SUFFIX = ".log";
+
+    // 기본 생성자: 운영 환경에서 사용됨
+    // logs/text 디렉토리와 기본 파서 사용
+    public LogAnalyzerService() {
+        this("logs/text", new LogParserUtils());
+    }
+
+    // 테스트용 또는 커스텀 로그 경로를 지정할 수 있는 생성자
+    // 로그 디렉토리만 외부에서 주입받고, 파서는 기본 사용
+    public LogAnalyzerService(String logDir) {
+        this(logDir, new LogParserUtils());
+    }
+
+    // 완전한 주입용 생성자
+    // 로그 디렉토리와 파서 모두 외부에서 주입 가능 (유닛 테스트 등 유연한 확장을 위함)
+    public LogAnalyzerService(String logDir, LogParserUtils parser) {
+        this.logDir = logDir;
+        this.parser = parser;
+    }
+
+    protected String getLogDir() {
+        return logDir;
+    }
 
     // 최신 로그 조회 API (오늘 기준으로 최근 100개 가져오기)
     public List<LogEntry> getLatestLogs(String date) {
@@ -60,7 +83,7 @@ public class LogAnalyzerService {
     // 로그 파일 날짜 목록 조회
     public List<String> getLogFileDate() {
         try {
-            return Files.list(Paths.get(LOG_DIR))
+            return Files.list(Paths.get(logDir))
                     .filter(Files::isRegularFile)
                     .map(Path::getFileName)
                     .map(Path::toString)
@@ -69,7 +92,7 @@ public class LogAnalyzerService {
                     .sorted() // 필요 시 정렬
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException("로그 디렉토리 조회 실패: " + LOG_DIR, e);
+            throw new RuntimeException("로그 디렉토리 조회 실패: " + logDir, e);
         }
     }
 
@@ -84,8 +107,8 @@ public class LogAnalyzerService {
     }
 
     // 파싱할 경로 날짜 조회
-    private Path resolveLogFilePath(String date) {
-        return Paths.get(LOG_DIR, LOG_PREFIX + date + LOG_SUFFIX);
+    protected Path resolveLogFilePath(String date) {
+        return Paths.get(logDir, LOG_PREFIX + date + LOG_SUFFIX);
     }
 
     // 공통 파싱 후 List 반환
