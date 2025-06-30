@@ -1,6 +1,7 @@
 package com.nana.logsentry.log.controller;
 
 import com.nana.logsentry.log.dto.TopIpStatDto;
+import com.nana.logsentry.log.dto.TopUriStatDto;
 import com.nana.logsentry.log.service.LogAnalyzerService;
 import com.nana.logsentry.model.LogEntry;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,13 +34,11 @@ public class LogAnalyzerController {
         return logAnalyzerService.getLatestLogs(date);
     }
 
-    @Operation(
-            summary = "TOP5 IP 통계",
+    @Operation(summary = "TOP5 IP 통계",
             description = "기준 날짜로부터 30일 간 가장 많은 요청을 발생시킨 IP TOP5를 조회합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "IP 통계를 정상적으로 조회했습니다."),
-                    @ApiResponse(responseCode = "500", description = "통계 조회 중 서버 오류가 발생했습니다.")
-            }
+                    @ApiResponse(responseCode = "500", description = "통계 조회 중 서버 오류가 발생했습니다.")}
     )
     @GetMapping("/top/ip")
     public List<TopIpStatDto> getTopIpStats(@RequestParam(name = "baseDate")
@@ -47,7 +46,16 @@ public class LogAnalyzerController {
         return logAnalyzerService.getTopLogIp(baseDate);
     }
 
-
+    @Operation(summary = "TOP5 URI 통계",
+            description = "기준 날짜로부터 30일 간 가장 많이 호출된 URI TOP5를 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "URI 통계를 정상적으로 조회했습니다."),
+                    @ApiResponse(responseCode = "500", description = "통계 조회 중 서버 오류가 발생했습니다.")}
+    )
+    @GetMapping("/top/uri")
+    public List<TopUriStatDto> getTopUriStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+        return logAnalyzerService.getTopLogUri(baseDate);
+    }
 
 
 }
