@@ -87,7 +87,7 @@ public class LogAnalyzerService {
                     .filter(Files::isRegularFile)
                     .map(Path::getFileName)
                     .map(Path::toString)
-                    .filter(name -> name.startsWith(LOG_PREFIX) && name.endsWith(LOG_SUFFIX))
+                    .filter(name -> name.matches("client-requests\\.\\d{4}-\\d{2}-\\d{2}\\.log"))
                     .map(name -> name.substring(LOG_PREFIX.length(), name.length() - LOG_SUFFIX.length()))
                     .sorted() // 필요 시 정렬
                     .collect(Collectors.toList());

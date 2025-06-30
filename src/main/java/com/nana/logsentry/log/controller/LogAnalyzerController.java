@@ -53,9 +53,19 @@ public class LogAnalyzerController {
                     @ApiResponse(responseCode = "500", description = "통계 조회 중 서버 오류가 발생했습니다.")}
     )
     @GetMapping("/top/uri")
-    public List<TopUriStatDto> getTopUriStats(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+    public List<TopUriStatDto> getTopUriStats(@RequestParam(name = "baseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         return logAnalyzerService.getTopLogUri(baseDate);
     }
 
+    @Operation(summary = "로그 파일 날짜 목록 조회",
+            description = "현재 저장된 로그 파일들의 날짜 목록을 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "날짜 목록을 정상적으로 조회했습니다."),
+                    @ApiResponse(responseCode = "500", description = "조회 중 오류가 발생했습니다.")}
+    )
+    @GetMapping("/dates")
+    public List<String> getLogFileDates() {
+        return logAnalyzerService.getLogFileDate();
+    }
 
 }
