@@ -1,7 +1,9 @@
 package com.nana.logsentry.log.controller;
 
-import com.nana.logsentry.log.dto.TopIpStatDto;
-import com.nana.logsentry.log.dto.TopUriStatDto;
+import com.nana.logsentry.log.dto.response.LogEntryResponseDto;
+import com.nana.logsentry.log.dto.request.LogFilterRequestDto;
+import com.nana.logsentry.log.dto.response.TopIpStatResponseDto;
+import com.nana.logsentry.log.dto.response.TopUriStatResponseDto;
 import com.nana.logsentry.log.service.LogAnalyzerService;
 import com.nana.logsentry.model.LogEntry;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,10 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,7 +41,7 @@ public class LogAnalyzerController {
                     @ApiResponse(responseCode = "500", description = "통계 조회 중 서버 오류가 발생했습니다.")}
     )
     @GetMapping("/top/ip")
-    public List<TopIpStatDto> getTopIpStats(@RequestParam(name = "baseDate")
+    public List<TopIpStatResponseDto> getTopIpStats(@RequestParam(name = "baseDate")
                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate baseDate){
         return logAnalyzerService.getTopLogIp(baseDate);
     }
@@ -53,7 +53,7 @@ public class LogAnalyzerController {
                     @ApiResponse(responseCode = "500", description = "통계 조회 중 서버 오류가 발생했습니다.")}
     )
     @GetMapping("/top/uri")
-    public List<TopUriStatDto> getTopUriStats(@RequestParam(name = "baseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
+    public List<TopUriStatResponseDto> getTopUriStats(@RequestParam(name = "baseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate baseDate) {
         return logAnalyzerService.getTopLogUri(baseDate);
     }
 
@@ -66,6 +66,27 @@ public class LogAnalyzerController {
     @GetMapping("/dates")
     public List<String> getLogFileDates() {
         return logAnalyzerService.getLogFileDate();
+    }
+
+    @Operation(summary = "로그 필터 조회",
+            description = "다양한 조건(IP, URI, Method, 상태코드, 레벨, traceId 등)으로 로그를 필터링합니다. 미입력 시 최신순 100개 반환",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "필터링된 로그 목록을 반환했습니다."),
+                    @ApiResponse(responseCode = "500", description = "로그 필터링 중 서버 오류가 발생했습니다.")}
+    )
+    @GetMapping("/filter")
+    public List<LogEntryResponseDto> filterLogs(@Validated @ModelAttribute LogFilterRequestDto request) {
+        if (request.getStartDate() == null) {
+            request.setStartDate(LocalDate.now().minusDays(7));
+        }
+        if (request.getEndDate() == null) {
+            request.setEndDate(LocalDate.now());
+        }
+
+        return logAnalyzerService.filterLogs(request)
+                .stream()
+                .map(LogEntryResponseDto::from)
+                .toList();
     }
 
 }
