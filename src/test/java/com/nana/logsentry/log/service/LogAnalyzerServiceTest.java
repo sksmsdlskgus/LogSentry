@@ -77,5 +77,10 @@ class LogAnalyzerServiceTest {
         assertEquals(2, result.get(0).getCount());
     }
 
-
+    @Test
+    @DisplayName("로그 파일 날짜 목록 반환")
+    void getLogFileDate_shouldReturnCorrectDates() {
+        List<String> dates = service.getLogFileDate();
+        assertTrue(dates.contains("2025-06-29"));
+    }
 }
