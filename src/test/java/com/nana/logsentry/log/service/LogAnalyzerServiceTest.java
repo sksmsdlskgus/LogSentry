@@ -68,4 +68,14 @@ class LogAnalyzerServiceTest {
         assertEquals(2, result.get(0).getCount());
     }
 
+    @Test
+    @DisplayName("TOP5 URI 조회")
+    void getTopLogUri_shouldReturnCorrectTopUris() {
+        List<TopUriStatDto> result = service.getTopLogUri(LocalDate.of(2025, 6, 29));
+        assertEquals(2, result.size());
+        assertEquals("/api/a", result.get(0).getUri());
+        assertEquals(2, result.get(0).getCount());
+    }
+
+
 }
