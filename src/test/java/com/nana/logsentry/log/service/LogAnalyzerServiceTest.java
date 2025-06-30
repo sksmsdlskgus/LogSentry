@@ -1,13 +1,17 @@
 package com.nana.logsentry.log.service;
 
-
+import com.nana.logsentry.log.dto.TopIpStatDto;
+import com.nana.logsentry.log.dto.TopUriStatDto;
+import com.nana.logsentry.model.LogEntry;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("LogAnalyzerService 단위 테스트")
 class LogAnalyzerServiceTest {
@@ -45,6 +49,14 @@ class LogAnalyzerServiceTest {
                 return tempDir.resolve("logs/text").toString();
             }
         };
+    }
+
+    @Test
+    @DisplayName("최근 로그 조회 시 최대 100개 반환")
+    void getLatestLogs_shouldReturnLimitedSortedLogs() {
+        List<LogEntry> logs = service.getLatestLogs("2025-06-29");
+        assertEquals(3, logs.size());
+        assertTrue(logs.get(0).getTimestamp().isAfter(logs.get(1).getTimestamp()));
     }
 
 
