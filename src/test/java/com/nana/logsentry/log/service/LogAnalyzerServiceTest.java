@@ -59,5 +59,13 @@ class LogAnalyzerServiceTest {
         assertTrue(logs.get(0).getTimestamp().isAfter(logs.get(1).getTimestamp()));
     }
 
+    @Test
+    @DisplayName("TOP5 IP 조회")
+    void getTopLogIp_shouldReturnCorrectTopIps() {
+        List<TopIpStatDto> result = service.getTopLogIp(LocalDate.of(2025, 6, 29));
+        assertEquals(2, result.size());
+        assertEquals("1.1.1.1", result.get(0).getClientIp());
+        assertEquals(2, result.get(0).getCount());
+    }
 
 }
