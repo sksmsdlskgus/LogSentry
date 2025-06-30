@@ -120,20 +120,14 @@ public class LogAnalyzerService {
         Path logPath = resolveLogFilePath(date);
 
         if (!Files.exists(logPath)) {
-            System.out.println("파일 없음: " + logPath);
             return Collections.emptyList();
         }
 
         try {
-            List<LogEntry> entries = Files.lines(logPath)
-                    .peek(line -> System.out.println("라인 내용: " + line)) // 디버그
+            return Files.lines(logPath)
                     .map(parser::parse)
-                    .peek(entry -> System.out.println("파싱 결과: " + entry)) // 디버그
                     .filter(Objects::nonNull)
                     .toList();
-
-            System.out.println("파싱된 엔트리 수: " + entries.size());
-            return entries;
         } catch (IOException e) {
             log.error("파일 읽기 실패: {}", logPath, e);
             return Collections.emptyList();
