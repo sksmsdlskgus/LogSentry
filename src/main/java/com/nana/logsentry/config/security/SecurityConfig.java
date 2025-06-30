@@ -1,4 +1,4 @@
-package com.nana.logsentry.security;
+package com.nana.logsentry.config.security;
 
 
 import org.springframework.context.annotation.Bean;

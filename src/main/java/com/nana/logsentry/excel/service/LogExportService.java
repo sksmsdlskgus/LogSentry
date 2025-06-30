@@ -1,6 +1,6 @@
 package com.nana.logsentry.excel.service;
 
-import com.nana.logsentry.excel.parser.LogParser;
+import com.nana.logsentry.util.parser.LogParserUtils;
 import com.nana.logsentry.model.LogEntry;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class LogExportService {
 
-    private final LogParser parser = new LogParser();
+    private final LogParserUtils parser = new LogParserUtils();
 
     // 지정된 날짜의 로그 파일을 파싱하여 LogEntry 리스트로 반환
     public List<LogEntry> parseLogFile(String date) {
@@ -24,7 +24,7 @@ public class LogExportService {
         Path logPath = Paths.get(logFile);
 
         if (!Files.exists(logPath)) {
-            return new ArrayList<>(); // 해당 날짜의 로그 파일이 없으면 빈 리스트 반환
+            return Collections.emptyList(); // 해당 날짜의 로그 파일이 없으면 빈 리스트 반환
         }
 
         try {

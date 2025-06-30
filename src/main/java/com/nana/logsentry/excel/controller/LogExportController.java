@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -30,14 +31,11 @@ import java.util.Map;
 
 @Tag(name = "로그 분석 및 내보내기", description = "로그 파일을 분석하고 Excel로 내보내는 기능 제공")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/logs")
 public class LogExportController {
 
     private final LogExportService logExportService;
-
-    public LogExportController(LogExportService logExportService) {
-        this.logExportService = logExportService;
-    }
 
     @Operation(summary = "로그 분석", description = "지정된 날짜의 로그 파일을 분석하여 요청 수, IP/URI/Method별 요청 통계를 제공합니다.")
     @ApiResponses(value = {

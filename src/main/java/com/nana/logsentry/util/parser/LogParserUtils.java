@@ -1,4 +1,4 @@
-package com.nana.logsentry.excel.parser;
+package com.nana.logsentry.util.parser;
 
 
 import com.nana.logsentry.model.LogEntry;
@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LogParser {
+public class LogParserUtils {
 
     private static final Pattern LOG_PATTERN = Pattern.compile(
             "timestamp=(.*?), traceId=(.*?), userId=(.*?),\\s*" +
