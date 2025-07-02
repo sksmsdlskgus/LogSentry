@@ -1,29 +1,43 @@
 package com.nana.logsentry.log;
 
+
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import io.micrometer.tracing.CurrentTraceContext;
+import io.micrometer.tracing.TraceContext;
+
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.UUID;
 
 @Component
+@AllArgsConstructor
 public class MdcLoggingFilter extends OncePerRequestFilter {
+
+    private final CurrentTraceContext currentTraceContext;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         try {
+
+            TraceContext context = currentTraceContext.context();
+            if (context != null) {
+                MDC.put(MdcKeys.TRACE_ID, context.traceId());
+                MDC.put(MdcKeys.SPAN_ID, context.spanId());
+            }
+
             MDC.put(MdcKeys.TIMESTAMP, Instant.now().toString());
-            MDC.put(MdcKeys.TRACE_ID, UUID.randomUUID().toString());
             MDC.put(MdcKeys.USER_ID, resolveUserId());
             MDC.put(MdcKeys.CLIENT_IP, resolveClientIp(request));
             MDC.put(MdcKeys.USER_AGENT, request.getHeader("User-Agent"));
