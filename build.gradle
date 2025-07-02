@@ -49,6 +49,17 @@ dependencies {
 
 	// Swagger http://localhost:8081/swagger-ui/index.html
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+	// Tracing
+	// Micrometer Tracing Core
+	implementation 'io.micrometer:micrometer-tracing:1.1.5'
+	// Micrometer ↔ OpenTelemetry 연결 브릿지
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.1.5'
+	// OpenTelemetry OTLP Exporter (Collector로 전송)
+	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+
+	// Spring Actuator (트레이싱 설정 포인트 제공)
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
