@@ -164,6 +164,9 @@ public class LogAnalyzerService {
         if (req.getTraceId() != null && !req.getTraceId().isBlank())
             stream = stream.filter(log -> log.getTraceId().equals(req.getTraceId()));
 
+        if (req.getSpanId() != null && !req.getSpanId().isBlank())
+            stream = stream.filter(log -> log.getSpanId().equals(req.getSpanId()));
+
         if (req.getUserId() != null && !req.getUserId().isBlank())
             stream = stream.filter(log -> log.getUserId().equals(req.getUserId()));
 

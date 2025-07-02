@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class LogParserUtils {
 
     private static final Pattern LOG_PATTERN = Pattern.compile(
-            "timestamp=(.*?), traceId=(.*?), userId=(.*?),\\s*" +
+            "timestamp=(.*?), traceId=(.*?), spanId=(.*?), userId=(.*?),\\s*" +
                     "uri=(.*?), method=(.*?), clientIp=(.*?), userAgent=(.*?), " +
                     "level=(.*?), logger=(.*?), thread=(.*?), message=(.*)"
     );
@@ -24,14 +24,15 @@ public class LogParserUtils {
         if (matcher.find()) {
             return new LogEntry(
                     LocalDateTime.parse(matcher.group(1), DATE_TIME_FORMAT), // timestamp
-                    matcher.group(8).trim(), // level
-                    matcher.group(2).trim(), // traceId
-                    matcher.group(3).trim(), // userId
-                    matcher.group(4).trim(), // uri
-                    matcher.group(5).trim(), // method
-                    matcher.group(6).trim(), // clientIp
-                    matcher.group(7).trim(), // userAgent
-                    matcher.group(11).trim() // message
+                    matcher.group(9).trim(),  // level
+                    matcher.group(2).trim(),  // traceId
+                    matcher.group(3).trim(),  // spanId
+                    matcher.group(4).trim(),  // userId
+                    matcher.group(5).trim(),  // uri
+                    matcher.group(6).trim(),  // method
+                    matcher.group(7).trim(),  // clientIp
+                    matcher.group(8).trim(),  // userAgent
+                    matcher.group(12).trim()  // message
             );
         }
         return null; // 파싱 실패 시 null

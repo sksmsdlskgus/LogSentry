@@ -41,6 +41,9 @@ public class LogFilterRequestDto {
     @Schema(description = "Trace ID (요청 흐름 추적용)", example = "abc123")
     private String traceId;
 
+    @Schema(description = "Span ID (세부 요청 추적용)", example = "def456")
+    private String spanId;
+
     @Schema(description = "User ID (로그인 사용자 식별)", example = "42")
     private String userId;
 }

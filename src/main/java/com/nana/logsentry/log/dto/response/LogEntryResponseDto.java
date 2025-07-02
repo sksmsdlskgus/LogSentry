@@ -17,6 +17,9 @@ public class LogEntryResponseDto {
     @Schema(description = "Trace ID", example = "xyz001")
     private String traceId;
 
+    @Schema(description = "Span ID", example = "def456")
+    private String spanId;
+
     @Schema(description = "유저 ID", example = "13")
     private String userId;
 
@@ -55,6 +58,7 @@ public class LogEntryResponseDto {
         return new LogEntryResponseDto(
                 entry.getTimestamp().toString(),
                 entry.getTraceId(),
+                entry.getSpanId(),
                 entry.getUserId(),
                 entry.getUri(),
                 entry.getMethod(),
