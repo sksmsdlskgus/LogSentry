@@ -57,6 +57,9 @@ dependencies {
 	implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.1.5'
 	// OpenTelemetry OTLP Exporter (Collector로 전송)
 	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	// WebClient 사용을 위한 비동기 웹 클라이언트 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
 
 	// Spring Actuator (트레이싱 설정 포인트 제공)
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
