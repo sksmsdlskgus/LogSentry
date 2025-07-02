@@ -25,22 +25,23 @@ class LogExportServiceTest {
     @DisplayName("유효한 로그 라인 파싱 시 LogEntry 객체 반환")
     void parse_shouldReturnLogEntry_whenLogIsValid() {
 
-        String line = "timestamp=2025-06-25 12:00:00, traceId=abc123, userId=1, " +
+        String line = "timestamp=2025-06-25 12:00:00, traceId=abc123, spanId=def456, userId=1, " +
                 "uri=/api/test, method=GET, clientIp=127.0.0.1, userAgent=JUnit, " +
-                "level=INFO, logger=com.example.TestLogger, thread=main, message=요청 처리 완료";
+                "level=INFO, logger=com.example.TestLogger, thread=main, message=200 요청 처리 완료";
 
         LogEntry entry = parser.parse(line);
 
         assertNotNull(entry);
         assertEquals(LocalDateTime.of(2025, 6, 25, 12, 0), entry.getTimestamp());
         assertEquals("abc123", entry.getTraceId());
+        assertEquals("def456", entry.getSpanId());
         assertEquals("1", entry.getUserId());
         assertEquals("/api/test", entry.getUri());
         assertEquals("GET", entry.getMethod());
         assertEquals("127.0.0.1", entry.getClientIp());
         assertEquals("JUnit", entry.getUserAgent());
         assertEquals("INFO", entry.getLevel());
-        assertEquals("요청 처리 완료", entry.getMessage());
+        assertEquals("200 요청 처리 완료", entry.getMessage());
 
     }
 
@@ -48,11 +49,11 @@ class LogExportServiceTest {
     @DisplayName("IP별로 요청 수를 정확히 집계")
     void getRequestsByIp_shouldGroupByIpCorrectly() {
         List<LogEntry> logs = List.of(
-                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 0), "INFO", "t1", "u1", "/a", "GET", "1.1.1.1", "agent", "msg"),
-                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 1), "INFO", "t2", "u2", "/b", "POST", "1.1.1.1", "agent", "msg"),
-                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 2), "INFO", "t3", "u3", "/c", "GET", "2.2.2.2", "agent", "msg"),
-                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 3), "INFO", "t4", "u4", "/d", "POST", "3.3.3.3", "agent", "msg"),
-                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 4), "INFO", "t5", "u5", "/e", "GET", "3.3.3.3", "agent", "msg")
+                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 0), "INFO", "t1", "s1", "u1", "/a", "GET", "1.1.1.1", "agent", "msg"),
+                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 1), "INFO", "t2", "s2", "u2", "/b", "POST", "1.1.1.1", "agent", "msg"),
+                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 2), "INFO", "t3", "s3", "u3", "/c", "GET", "2.2.2.2", "agent", "msg"),
+                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 3), "INFO", "t4", "s4", "u4", "/d", "POST", "3.3.3.3", "agent", "msg"),
+                new LogEntry(LocalDateTime.of(2025, 6, 25, 12, 4), "INFO", "t5", "s5", "u5", "/e", "GET", "3.3.3.3", "agent", "msg")
         );
 
         Map<String, Long> result = service.getRequestsByIp(logs);

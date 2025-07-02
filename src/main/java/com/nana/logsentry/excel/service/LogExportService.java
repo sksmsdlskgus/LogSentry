@@ -67,12 +67,14 @@ public class LogExportService {
             headerRow.createCell(0).setCellValue("시간");
             headerRow.createCell(1).setCellValue("Level");
             headerRow.createCell(2).setCellValue("Trace ID");
-            headerRow.createCell(3).setCellValue("User ID");
-            headerRow.createCell(4).setCellValue("URI");
-            headerRow.createCell(5).setCellValue("Method");
-            headerRow.createCell(6).setCellValue("IP");
-            headerRow.createCell(7).setCellValue("User-Agent");
-            headerRow.createCell(8).setCellValue("Message");
+            headerRow.createCell(3).setCellValue("Span ID");
+            headerRow.createCell(4).setCellValue("User ID");
+            headerRow.createCell(5).setCellValue("URI");
+            headerRow.createCell(6).setCellValue("Method");
+            headerRow.createCell(7).setCellValue("IP");
+            headerRow.createCell(8).setCellValue("User-Agent");
+            headerRow.createCell(9).setCellValue("Message");
+
 
             // 데이터 행 추가
             int rowNum = 1;
@@ -81,12 +83,13 @@ public class LogExportService {
                 row.createCell(0).setCellValue(entry.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 row.createCell(1).setCellValue(entry.getLevel());
                 row.createCell(2).setCellValue(entry.getTraceId());
-                row.createCell(3).setCellValue(entry.getUserId());
-                row.createCell(4).setCellValue(entry.getUri());
-                row.createCell(5).setCellValue(entry.getMethod());
-                row.createCell(6).setCellValue(entry.getClientIp());
-                row.createCell(7).setCellValue(entry.getUserAgent());
-                row.createCell(8).setCellValue(entry.getMessage());
+                row.createCell(3).setCellValue(entry.getSpanId());
+                row.createCell(4).setCellValue(entry.getUserId());
+                row.createCell(5).setCellValue(entry.getUri());
+                row.createCell(6).setCellValue(entry.getMethod());
+                row.createCell(7).setCellValue(entry.getClientIp());
+                row.createCell(8).setCellValue(entry.getUserAgent());
+                row.createCell(9).setCellValue(entry.getMessage());
             }
 
             // 통계 시트 생성
@@ -101,7 +104,7 @@ public class LogExportService {
                     "메소드별 요청 수", getRequestsByMethod(entries));
 
             // 자동 컬럼 크기 조정
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 10; i++) {
                 detailSheet.autoSizeColumn(i);
                 statsSheet.autoSizeColumn(i);
             }

@@ -7,7 +7,8 @@ package com.nana.logsentry.log;
 public class MdcKeys {
 
     // 고유 추적 정보
-    public static final String TRACE_ID = "traceId";       // 요청 고유 식별자(UUID)
+    public static final String TRACE_ID = "traceId";       // 분산 추적용 전체 요청 ID (요청 간 전파되는 고유 식별자)
+    public static final String SPAN_ID = "spanId";         // 요청 내 개별 작업 단위 식별자 (traceId 하위 작업 단위)
     public static final String TIMESTAMP = "timestamp";    // 요청 시간 (ISO 8601 문자열)
 
     // 사용자 관련 정보

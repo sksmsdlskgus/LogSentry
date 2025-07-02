@@ -1,3 +1,7 @@
+spring:
+  application:
+    name: logsentry-api
+
 logging:
   file:
     path: ./logs
@@ -6,3 +10,11 @@ logging:
     com.nana.logsentry: INFO
 server:
   port: 8081
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318/v1/traces  # OpenTelemetry Collector 엔드포인트
