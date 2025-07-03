@@ -1,19 +1,65 @@
-version: '3'
+version: '3.8'
 
 services:
-  zipkin:
-    image: openzipkin/zipkin:latest
-    container_name: zipkin
+  logsentry-api:
+    volumes:
+      - ./logs:/app/logs
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "9411:9411"
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - otel-collector
+    networks:
+      - monitoring
 
   otel-collector:
     image: otel/opentelemetry-collector:latest
     container_name: otel-collector
     ports:
-      - "4318:4318"  # OTLP HTTP 포트
+      - "4318:4318" # HTTP OTLP
+      - "4317:4317" # GRPC OTLP
     volumes:
       - ./otel-config.yml:/etc/otel/config.yaml
     command: ["--config=/etc/otel/config.yaml"]
     depends_on:
-      - zipkin
+      - tempo
+    networks:
+      - monitoring
+
+  tempo:
+    image: grafana/tempo:2.5.0
+    container_name: tempo
+    ports:
+      - "3200:3200"  # Tempo UI/Grafana 연동용
+    volumes:
+      - ./tempo/tempo.yml:/etc/tempo.yml
+      - tempo-data:/var/tempo
+    command: ["-config.file=/etc/tempo.yml"]
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - tempo
+    networks:
+      - monitoring
+
+volumes:
+  grafana-storage:
+  tempo-data:
+
+networks:
+  monitoring:

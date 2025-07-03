@@ -1,0 +1,25 @@
+server:
+  http_listen_port: 3200
+  http_server_write_timeout: 30s
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        http:
+        grpc:
+
+ingester:
+  trace_idle_period: 10s
+  max_block_bytes: 100_000_000
+  max_block_duration: 5m
+
+querier: {}
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/tempo/traces
+    wal:
+      path: /var/tempo/wal

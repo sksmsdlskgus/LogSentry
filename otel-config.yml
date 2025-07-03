@@ -2,16 +2,18 @@ receivers:
   otlp:
     protocols:
       http:
-        endpoint: 0.0.0.0:4318
+        endpoint: "0.0.0.0:4318"
+      grpc:
+        endpoint: "0.0.0.0:4317"
 
 exporters:
-  debug:
-    verbosity: detailed
-  zipkin:
-    endpoint: "http://host.docker.internal:9411/api/v2/spans"
+  otlp/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [debug, zipkin]
+      exporters: [otlp/tempo]
