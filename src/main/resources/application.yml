@@ -8,6 +8,7 @@ logging:
   level:
     root: INFO
     com.nana.logsentry: INFO
+
 server:
   port: 8081
 
@@ -17,4 +18,6 @@ management:
       probability: 1.0
   otlp:
     tracing:
-      endpoint: http://localhost:4318/v1/traces  # OpenTelemetry Collector 엔드포인트
+      endpoint: http://otel-collector:4318/v1/traces
+      export:
+        enabled: true
