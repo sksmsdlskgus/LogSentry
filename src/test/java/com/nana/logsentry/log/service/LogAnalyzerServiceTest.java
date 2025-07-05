@@ -32,9 +32,9 @@ class LogAnalyzerServiceTest {
         String date = "2025-06-29";
         Path logFile = logTextDir.resolve("client-requests." + date + ".log");
         Files.write(logFile, List.of(
-                "timestamp=2025-06-29 12:00:00, traceId=abc123, spanId=def001, userId=u1, uri=/api/a, method=GET, clientIp=1.1.1.1, userAgent=TestAgent, level=INFO, logger=test, thread=main, message=500 서버 오류 발생",
-                "timestamp=2025-06-29 12:01:00, traceId=abc124, spanId=def002, userId=u2, uri=/api/b, method=POST, clientIp=2.2.2.2, userAgent=TestAgent, level=INFO, logger=test, thread=main, message=200 요청 성공",
-                "timestamp=2025-06-29 12:02:00, traceId=abc125, spanId=def003, userId=u3, uri=/api/a, method=GET, clientIp=1.1.1.1, userAgent=TestAgent, level=INFO, logger=test, thread=main, message=200 요청 성공"
+                "timestamp=2025-06-29T12:00:00+09:00, traceId=abc123, spanId=def001, userId=u1, uri=/api/a, method=GET, clientIp=1.1.1.1, userAgent=TestAgent, level=INFO, logger=test, thread=main, message=500 서버 오류 발생",
+                "timestamp=2025-06-29T12:01:00+09:00, traceId=abc124, spanId=def002, userId=u2, uri=/api/b, method=POST, clientIp=2.2.2.2, userAgent=TestAgent, level=INFO, logger=test, thread=main, message=200 요청 성공",
+                "timestamp=2025-06-29T12:02:00+09:00, traceId=abc125, spanId=def003, userId=u3, uri=/api/a, method=GET, clientIp=1.1.1.1, userAgent=TestAgent, level=INFO, logger=test, thread=main, message=200 요청 성공"
         ));
 
 
