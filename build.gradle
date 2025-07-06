@@ -64,9 +64,9 @@ dependencies {
 	// Micrometer Context Propagation: Reactor/WebClient 등 비동기 환경에서 trace context 전파
 	implementation 'io.micrometer:context-propagation'
 
-
-	// Spring Actuator (트레이싱 설정 포인트 제공)
+	// Prometheus Exporter 포함한 Actuator (메트릭 수집 포인트 제공)
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
