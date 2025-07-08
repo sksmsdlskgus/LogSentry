@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+logging:
+  file:
+    path: ./logs
+  level:
+    root: INFO
+    com.nana.logsentry: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    prometheus:
+      enabled: true
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    enable:
+      all: true
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+    exemplars:
+      enabled: true
+
+  tracing:
+    sampling:
+      probability: 1.0
+
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces
+      export:
+        enabled: true
