@@ -1,7 +1,6 @@
-version: '3.8'
-
 services:
   logsentry-api:
+    container_name: logsentry-api
     volumes:
       - ./logs:/app/logs
     build:
@@ -54,6 +53,18 @@ services:
       - grafana-storage:/var/lib/grafana
     depends_on:
       - tempo
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - logsentry-api
     networks:
       - monitoring
 
