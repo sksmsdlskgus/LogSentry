@@ -1,9 +1,0 @@
-global:
-  scrape_interval: 5s
-  evaluation_interval: 5s
-
-scrape_configs:
-  - job_name: 'logsentry-api'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: ['logsentry-api:8081']
