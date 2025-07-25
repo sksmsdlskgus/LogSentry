@@ -64,6 +64,7 @@ dependencies {
 	implementation 'io.opentelemetry:opentelemetry-sdk'
 	// Micrometer Context Propagation: Reactor/WebClient 등 비동기 환경에서 trace context 전파
 	implementation 'io.micrometer:context-propagation'
+	implementation 'io.micrometer:micrometer-observation:1.13.0'
 
 	// Prometheus Exporter 포함한 Actuator (메트릭 수집 포인트 제공)
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
