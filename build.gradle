@@ -57,16 +57,21 @@ dependencies {
 	implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.1.5'
 	// OpenTelemetry OTLP Exporter (Collector로 전송)
 	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	implementation 'io.micrometer:micrometer-registry-otlp'
 	// WebClient 사용을 위한 비동기 웹 클라이언트 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	// OpenTelemetry SDK: 트레이싱, 메트릭 등을 수집·처리하는 핵심 라이브러리
 	implementation 'io.opentelemetry:opentelemetry-sdk'
 	// Micrometer Context Propagation: Reactor/WebClient 등 비동기 환경에서 trace context 전파
 	implementation 'io.micrometer:context-propagation'
+	implementation 'io.micrometer:micrometer-observation:1.13.0'
 
-
-	// Spring Actuator (트레이싱 설정 포인트 제공)
+	// Prometheus Exporter 포함한 Actuator (메트릭 수집 포인트 제공)
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+	// Exemplar와 로그 correlation을 위한 의존성
+	runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:1.32.1-alpha'
+
 }
 
 tasks.named('test') {

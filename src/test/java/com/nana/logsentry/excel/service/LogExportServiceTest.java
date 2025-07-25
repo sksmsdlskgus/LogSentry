@@ -24,8 +24,7 @@ class LogExportServiceTest {
     @Test
     @DisplayName("유효한 로그 라인 파싱 시 LogEntry 객체 반환")
     void parse_shouldReturnLogEntry_whenLogIsValid() {
-
-        String line = "timestamp=2025-06-25 12:00:00, traceId=abc123, spanId=def456, userId=1, " +
+        String line = "timestamp=2025-06-25T12:00:00+09:00, traceId=abc123, spanId=def456, userId=1, " +
                 "uri=/api/test, method=GET, clientIp=127.0.0.1, userAgent=JUnit, " +
                 "level=INFO, logger=com.example.TestLogger, thread=main, message=200 요청 처리 완료";
 
@@ -42,8 +41,8 @@ class LogExportServiceTest {
         assertEquals("JUnit", entry.getUserAgent());
         assertEquals("INFO", entry.getLevel());
         assertEquals("200 요청 처리 완료", entry.getMessage());
-
     }
+
 
     @Test
     @DisplayName("IP별로 요청 수를 정확히 집계")
