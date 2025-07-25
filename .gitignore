@@ -38,3 +38,6 @@ out/
 
 ## log 테스트용
 logs/
+
+## Environment variables
+.env
