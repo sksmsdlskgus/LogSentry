@@ -69,6 +69,9 @@ dependencies {
 	// Prometheus Exporter 포함한 Actuator (메트릭 수집 포인트 제공)
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
+	// Exemplar와 로그 correlation을 위한 의존성
+	runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:1.32.1-alpha'
+
 }
 
 tasks.named('test') {
