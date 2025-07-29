@@ -73,6 +73,13 @@ dependencies {
 	// Exemplar와 로그 correlation을 위한 의존성
 	runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:1.32.1-alpha'
 
+	// Logback 로그를 Kafka 토픽으로 전송하기 위한 Appender 의존성
+	implementation 'com.github.danielwegener:logback-kafka-appender:0.1.0'
+	// Spring Boot에서 Kafka 프로듀서/컨슈머 사용 및 토픽 생성/연결 안정화를 위한 설정
+	implementation 'org.springframework.kafka:spring-kafka'
+	// Kafka 테스트용 의존성 (임베디드 Kafka 등)
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+
 }
 
 tasks.named('test') {
