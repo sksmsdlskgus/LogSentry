@@ -96,10 +96,18 @@
         <appender-ref ref="JSON_FILE"/>
     </logger>
 
+    <logger name="com.github.danielwegener.logback.kafka" level="INFO"/>
+    <logger name="org.apache.kafka" level="INFO"/>
+
     <!-- Root Logger: 전체 로그 레벨과 사용할 Appender를 지정 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="TEXT_FILE"/>
         <appender-ref ref="JSON_FILE"/>
     </root>
+
+    <logger name="kafkaLogger" level="INFO" additivity="false">
+        <appender-ref ref="ASYNC_KAFKA"/>
+    </logger>
+
 </configuration>
