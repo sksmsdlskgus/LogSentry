@@ -6,6 +6,7 @@ server:
   port: 8081
 
 logging:
+  config: classpath:logback-spring.xml
   file:
     path: ./logs
   pattern:
