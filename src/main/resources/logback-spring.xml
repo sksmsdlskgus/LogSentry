@@ -66,6 +66,21 @@
         </encoder>
     </appender>
 
+    <!-- KafkaAppender -->
+    <appender name="KAFKA_JSON" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <topic>app-logs</topic>
+        <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+            <layout class="net.logstash.logback.layout.LogstashLayout"/>
+        </encoder>
+        <producerConfig>bootstrap.servers=kafka:9092</producerConfig>
+        <producerConfig>acks=1</producerConfig>
+        <producerConfig>retries=3</producerConfig>
+        <producerConfig>linger.ms=50</producerConfig>
+        <producerConfig>batch.size=16384</producerConfig>
+        <producerConfig>max.block.ms=30000</producerConfig>
+        <producerConfig>security.protocol=PLAINTEXT</producerConfig>
+    </appender>
+
     <!-- heartbeat 전용 로그만 DEBUG 레벨 적용 -->
     <logger name="heartbeatLogger" level="DEBUG" additivity="false">
         <appender-ref ref="TEXT_FILE"/>
@@ -78,4 +93,5 @@
         <appender-ref ref="TEXT_FILE"/>
         <appender-ref ref="JSON_FILE"/>
     </root>
+
 </configuration>
