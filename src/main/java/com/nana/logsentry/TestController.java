@@ -19,4 +19,11 @@ public class TestController {
         return ResponseEntity.ok("트레이싱 확인용 응답 ok");
     }
 
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello(@RequestParam String name) {
+        log.info("Hello API 호출: {}", name);       // 로컬/파일
+        BizLogger.info("Hello API 호출: {}", name); // Kafka
+        return ResponseEntity.ok("hi " + name);
+    }
+
 }
