@@ -1,5 +1,6 @@
 package com.nana.logsentry.tracing.service;
 
+import com.nana.logsentry.kafka.BizLogger;
 import com.nana.logsentry.tracing.client.BServiceClient;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,9 @@ public class AService { // 비즈니스 로직 및 클라이언트 호출
 
     @Observed(name = "aService.doBusiness", contextualName = "AService → callB")
     public Mono<String> doBusiness() {
-        log.info("[AService] B 서비스 호출 시작");
+        BizLogger.info("[AService] B 서비스 호출 시작");
         return bServiceClient.callB()
-                .doOnNext(response -> log.info("[AService] B 서비스 응답 수신: {}", response))
+                .doOnNext(response -> BizLogger.info("[AService] B 서비스 응답 수신: {}", response))
                 .map(response -> "A 완료 + " + response);
     }
 }
