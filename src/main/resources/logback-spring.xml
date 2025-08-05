@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
     <property name="LOG_PATH" value="./logs"/>
 
     <!-- Console Appender: 로그를 콘솔에 출력하기 위한 설정 -->
@@ -65,11 +66,38 @@
         </encoder>
     </appender>
 
+    <!-- KafkaAppender -->
+    <appender name="KAFKA_JSON" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <topic>app-logs</topic>
+        <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+            <layout class="net.logstash.logback.layout.LogstashLayout"/>
+        </encoder>
+        <producerConfig>bootstrap.servers=kafka:9092</producerConfig>
+        <producerConfig>acks=1</producerConfig>
+        <producerConfig>retries=3</producerConfig>
+        <producerConfig>linger.ms=50</producerConfig>
+        <producerConfig>batch.size=16384</producerConfig>
+        <producerConfig>max.block.ms=30000</producerConfig>
+        <producerConfig>security.protocol=PLAINTEXT</producerConfig>
+    </appender>
+
+    <!-- Async Kafka -->
+    <appender name="ASYNC_KAFKA" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="KAFKA_JSON"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+        <neverBlock>true</neverBlock>
+    </appender>
+
     <!-- heartbeat 전용 로그만 DEBUG 레벨 적용 -->
     <logger name="heartbeatLogger" level="DEBUG" additivity="false">
         <appender-ref ref="TEXT_FILE"/>
         <appender-ref ref="JSON_FILE"/>
     </logger>
+
+    <logger name="com.github.danielwegener.logback.kafka" level="INFO"/>
+    <logger name="org.apache.kafka" level="INFO"/>
 
     <!-- Root Logger: 전체 로그 레벨과 사용할 Appender를 지정 -->
     <root level="INFO">
@@ -77,4 +105,9 @@
         <appender-ref ref="TEXT_FILE"/>
         <appender-ref ref="JSON_FILE"/>
     </root>
+
+    <logger name="kafkaLogger" level="INFO" additivity="false">
+        <appender-ref ref="ASYNC_KAFKA"/>
+    </logger>
+
 </configuration>

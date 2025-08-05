@@ -6,4 +6,5 @@ COPY build/libs/LogSentry-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar app.jar"]
+
