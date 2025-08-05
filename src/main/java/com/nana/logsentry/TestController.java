@@ -26,4 +26,16 @@ public class TestController {
         return ResponseEntity.ok("hi " + name);
     }
 
+    @GetMapping("/error-test")
+    public ResponseEntity<String> errorTest() {
+        try {
+            throw new RuntimeException("💥 테스트용 강제 예외 발생!");
+        } catch (RuntimeException e) {
+            log.error("🚨 로컬 전용 ERROR 로그 발생", e);
+            BizLogger.error("🚨 Kafka 전송용 ERROR 로그 발생: /error-test 호출됨", e);
+            return ResponseEntity.internalServerError().body("error");
+        }
+    }
+
+
 }
