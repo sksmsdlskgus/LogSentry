@@ -21,6 +21,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -30,18 +31,56 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.10.0'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// Logback - 로깅을 위한 구현체 라이브러리
 	implementation 'ch.qos.logback:logback-classic'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+	implementation 'net.logstash.logback:logstash-logback-encoder:5.2'
+
+	// Spring Security: 인증/인가를 위한 보안 설정 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// Apache POI - Excel 파일 처리를 위한 기본 라이브러리
-	// implementation 'org.apache.poi:poi:5.2.3'
+	implementation 'org.apache.poi:poi:5.2.3'
 
 	// Apache POI OOXML - .xlsx 형식의 Excel 파일 처리를 위한 확장 라이브러리
-	// implementation 'org.apache.poi:poi-ooxml:5.2.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+	// Swagger http://localhost:8081/swagger-ui/index.html
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+	// Tracing
+	// Micrometer Tracing Core
+	implementation 'io.micrometer:micrometer-tracing:1.1.5'
+	// Micrometer ↔ OpenTelemetry 연결 브릿지
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.1.5'
+	// OpenTelemetry OTLP Exporter (Collector로 전송)
+	implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	implementation 'io.micrometer:micrometer-registry-otlp'
+	// WebClient 사용을 위한 비동기 웹 클라이언트 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	// OpenTelemetry SDK: 트레이싱, 메트릭 등을 수집·처리하는 핵심 라이브러리
+	implementation 'io.opentelemetry:opentelemetry-sdk'
+	// Micrometer Context Propagation: Reactor/WebClient 등 비동기 환경에서 trace context 전파
+	implementation 'io.micrometer:context-propagation'
+	implementation 'io.micrometer:micrometer-observation:1.13.0'
+
+	// Prometheus Exporter 포함한 Actuator (메트릭 수집 포인트 제공)
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+	// Exemplar와 로그 correlation을 위한 의존성
+	runtimeOnly 'io.opentelemetry.instrumentation:opentelemetry-logback-mdc-1.0:1.32.1-alpha'
+
+	// Logback 로그를 Kafka 토픽으로 전송하기 위한 Appender 의존성
+	implementation 'com.github.danielwegener:logback-kafka-appender:0.1.0'
+	// Spring Boot에서 Kafka 프로듀서/컨슈머 사용 및 토픽 생성/연결 안정화를 위한 설정
+	implementation 'org.springframework.kafka:spring-kafka'
+	// Kafka 테스트용 의존성 (임베디드 Kafka 등)
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+
 }
 
 tasks.named('test') {
