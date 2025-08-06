@@ -4,12 +4,15 @@ import com.nana.logsentry.kafka.BizLogger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "로그/알림 테스트 API",
+        description = "Kafka 로그 전송, 스택 트레이스, Slack ALERT 알림을 테스트하는 API 모음")
 @RestController
 @Slf4j
 public class TestController {
