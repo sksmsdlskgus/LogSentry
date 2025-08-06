@@ -1,3 +1,8 @@
-spring:
-  profiles:
-    active: prod
+logging:
+  file:
+    path: ./logs
+  level:
+    root: INFO
+    com.nana.logsentry: INFO
+server:
+  port: 8081
