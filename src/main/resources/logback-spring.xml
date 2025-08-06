@@ -70,7 +70,14 @@
     <appender name="KAFKA_JSON" class="com.github.danielwegener.logback.kafka.KafkaAppender">
         <topic>app-logs</topic>
         <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
-            <layout class="net.logstash.logback.layout.LogstashLayout"/>
+            <layout class="net.logstash.logback.layout.LogstashLayout">
+                <!-- MDC, traceId/spanId 등 포함 -->
+                <includeMdc>true</includeMdc>
+                <!-- stack_trace 필드 활성화 (Exception 발생 시에만 생성됨) -->
+                <includeException>true</includeException>
+                <!-- caller data는 성능 부담 비활성화 -->
+                <includeCallerData>false</includeCallerData>
+            </layout>
         </encoder>
         <producerConfig>bootstrap.servers=kafka:9092</producerConfig>
         <producerConfig>acks=1</producerConfig>

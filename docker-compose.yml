@@ -196,6 +196,7 @@ services:
       - "${LOGSTASH_PORT}:5044"
     environment:
       LS_JAVA_OPTS: "-Xms256m -Xmx512m"
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
     restart: unless-stopped
 
   elasticsearch:
