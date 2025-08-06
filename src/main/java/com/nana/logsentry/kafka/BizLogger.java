@@ -23,4 +23,8 @@ public class BizLogger {
     public static void error(String msg, Object... args) {
         logger.error(KafkaMarker.KAFKA, msg, args);
     }
+
+    public static void alert(String msg, Object... args) {
+        logger.error(KafkaMarker.ALERT, msg, args);
+    }
 }
