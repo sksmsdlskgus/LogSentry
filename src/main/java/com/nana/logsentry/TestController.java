@@ -66,4 +66,23 @@ public class TestController {
         }
     }
 
+    @Operation(
+            summary = "중요 장애 발생 테스트 조회",
+            description = "강제 RuntimeException을 발생시켜 ALERT 마커를 통한 Slack 즉시 알림을 발생시킵니다. "
+                    + "중요 장애 상황(critical error) 시나리오를 테스트할 수 있습니다.",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = "중요 장애 발생으로 에러 로그 및 Slack 알림이 전송되었습니다.")
+            }
+    )
+    @GetMapping("/critical-error")
+    public ResponseEntity<String> criticalErrorTest() {
+        try {
+            throw new RuntimeException("🔥 중요 장애 발생!");
+        } catch (RuntimeException e) {
+            log.error("로컬 전용 ERROR 로그", e);
+            BizLogger.alert("🔥 ALERT: 중요 장애 발생! /critical-error 호출됨", e);
+            return ResponseEntity.internalServerError().body("critical error");
+        }
+    }
+
 }
