@@ -82,16 +82,17 @@
         <producerConfig>bootstrap.servers=kafka:9092</producerConfig>
         <producerConfig>acks=1</producerConfig>
         <producerConfig>retries=3</producerConfig>
-        <producerConfig>linger.ms=50</producerConfig>
-        <producerConfig>batch.size=16384</producerConfig>
+        <producerConfig>linger.ms=100</producerConfig>
+        <producerConfig>compression.type=snappy</producerConfig>
+        <producerConfig>batch.size=65536</producerConfig>
+        <producerConfig>max.in.flight.requests.per.connection=5</producerConfig>
         <producerConfig>max.block.ms=30000</producerConfig>
         <producerConfig>security.protocol=PLAINTEXT</producerConfig>
     </appender>
 
-    <!-- Async Kafka -->
     <appender name="ASYNC_KAFKA" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="KAFKA_JSON"/>
-        <queueSize>512</queueSize>
+        <queueSize>10000</queueSize>
         <discardingThreshold>0</discardingThreshold>
         <includeCallerData>false</includeCallerData>
         <neverBlock>true</neverBlock>
