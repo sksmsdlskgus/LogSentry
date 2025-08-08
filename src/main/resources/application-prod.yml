@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: logsentry-api
+
+server:
+  port: 8081
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    root: INFO
+    com.nana.logsentry: INFO
+
+management:
+  tracing:
+    enabled: true
+    propagation:
+      type: w3c
+    sampling:
+      probability: 1.0
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,info,prometheus"
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        http.client.requests: true
+      sla:
+        http.server.requests: 50ms,100ms,200ms,300ms,500ms,1s,2s
+    export:
+      prometheus:
+        enabled: true
+        step: PT1S
+        histogram-flavor: prometheus
+        descriptions: true
+        exemplars:
+          enabled: true
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE:prod}
+      version: ${APP_VERSION:1.0.0}
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces

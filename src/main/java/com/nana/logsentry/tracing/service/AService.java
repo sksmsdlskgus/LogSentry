@@ -1,0 +1,27 @@
+package com.nana.logsentry.tracing.service;
+
+import com.nana.logsentry.kafka.BizLogger;
+import com.nana.logsentry.tracing.client.BServiceClient;
+import io.micrometer.observation.annotation.Observed;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+@Service
+@RequiredArgsConstructor
+public class AService { // 비즈니스 로직 및 클라이언트 호출
+
+    private static final Logger log = LoggerFactory.getLogger(AService.class);
+
+    private final BServiceClient bServiceClient;
+
+    @Observed(name = "aService.doBusiness", contextualName = "AService → callB")
+    public Mono<String> doBusiness() {
+        BizLogger.info("[AService] B 서비스 호출 시작");
+        return bServiceClient.callB()
+                .doOnNext(response -> BizLogger.info("[AService] B 서비스 응답 수신: {}", response))
+                .map(response -> "A 완료 + " + response);
+    }
+}
