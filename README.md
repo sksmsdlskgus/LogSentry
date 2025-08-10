@@ -131,5 +131,113 @@
 
 ```mermaid
 
+flowchart TB
+  %% ---------- Styles ----------
+  classDef app fill:#E3F2FD,stroke:#2196F3,stroke-width:2px,color:#0D47A1;
+  classDef otlp fill:#E8F5E9,stroke:#43A047,stroke-width:2px,color:#1B5E20;
+  classDef tempo fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px,color:#E65100;
+  classDef prometheus fill:#FFEBEE,stroke:#E53935,stroke-width:2px,color:#B71C1C;
+  classDef grafana fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,color:#4A148C;
+  classDef kafka fill:#FFF8E1,stroke:#FBC02D,stroke-width:2px,color:#795548;
+  classDef logstash fill:#E0F2F1,stroke:#00796B,stroke-width:2px,color:#004D40;
+  classDef elastic fill:#F1F8E9,stroke:#689F38,stroke-width:2px,color:#33691E;
+  classDef kibana fill:#E0F7FA,stroke:#00ACC1,stroke-width:2px,color:#006064;
+  classDef slack fill:#FCE4EC,stroke:#D81B60,stroke-width:2px,color:#880E4F;
+  classDef filebeat fill:#F9FBE7,stroke:#AFB42B,stroke-width:2px,color:#827717;
+
+  %% ---------- Application ----------
+  subgraph App[Spring Boot Application 8081]
+    A1[Micrometer Tracing<br>traceId spanId propagation]
+    A2[Micrometer Metrics via OTLP<br>JVM HTTP Exemplars]
+    A3[Logback MDC JSON<br>Console File Kafka]
+  end
+  class A1,A2,A3 app
+
+  %% ---------- Collector ----------
+  subgraph OTEL[OpenTelemetry Collector]
+    direction TB
+    C1[OTLP in: <br> gRPC 4317ㅣHTTP 4318]
+    C2[Collector Self Metrics<br>/metrics 8888]
+    C3[Prometheus Exporter<br>/metrics 8889]
+  end
+  class C1,C2,C3 otlp
+
+  %% ---------- Backends ----------
+  subgraph Backends[Observability Backends]
+    direction LR
+    subgraph Tempo[Grafana Tempo 3200]
+      T1[Trace Store<br>OTLP gRPC]
+    end
+    class T1 tempo
+
+    subgraph Prometheus[Prometheus 9090]
+      P1[Time Series Database<br>Metrics storage]
+    end
+    class P1 prometheus
+  end
+
+  %% ---------- Grafana ----------
+  subgraph Grafana[Grafana 3000]
+    G1[Dashboards<br>Prometheus metrics]
+    G3[Trace Viewer<br>Tempo]
+    G2[Metrics to Traces Correlation<br>Exemplars drilldown]
+  end
+  class G1,G2,G3 grafana
+
+  %% ---------- Logging pipeline ----------
+  subgraph Kafka[Apache Kafka 9092 9094]
+    K1[Topic app-logs<br>Central log streaming JSON]
+  end
+  class K1 kafka
+
+  subgraph Logstash[Logstash]
+    L1[Consumer<br>Parse aggregate threshold]
+  end
+  class L1 logstash
+
+  subgraph Elasticsearch[Elasticsearch 9200]
+    E1[Index and Search<br>app-logs template]
+  end
+  class E1 elastic
+
+  subgraph Kibana[Kibana 5601]
+    Kb1[Log dashboards and search]
+  end
+  class Kb1 kibana
+
+  subgraph Slack[Slack Webhook]
+    S1[Error alerts<br>Conditional WARN ERROR]
+  end
+  class S1 slack
+
+  subgraph Filebeat[Filebeat and Logstash backup]
+    F1[Backup channel]
+  end
+  class F1 filebeat
+
+  %% ---------- Flows ----------
+  %% App to Collector
+  A1 -->|OTLP| C1
+  A2 -->|OTLP| C1
+
+  %% Collector to Backends
+  C1 -->|OTLP gRPC| T1
+  P1 -.->|scrape 8889 exporter| C3
+  P1 -.->|scrape 8888 self metrics| C2
+
+  %% Grafana
+  P1 --> G1
+  T1 --> G3
+  G1 --> G2
+  G3 --> G2
+
+  %% Logs to ELK and Slack
+  A3 --> K1
+  K1 --> L1
+  L1 --> E1
+  E1 --> Kb1
+  L1 --> S1
+  K1 --> F1
+
 
 ```
