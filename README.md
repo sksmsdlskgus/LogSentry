@@ -3,6 +3,65 @@
 > **Tracing · Metrics · Logging**을 하나의 파이프라인으로 연계하여,<br>
 > 서비스 흐름 추적·성능 모니터링·로그 분석·운영 데이터 조회 기능까지 제공하는 백엔드 시스템
 
+<details>
+  <summary> <b>💡 구조 파이프라인 다이어그램 한눈에 보기</b></summary>
+  
+```text
+[Spring Boot App]
+    │
+    ├─▶ ✅ Micrometer Tracing (자동 traceId / spanId 생성 및 전파)
+    │       │
+    │       └─▶ ✅ OTLP Exporter → OpenTelemetry Collector 전송
+    │                  │
+    │                  ├─ traces ▶ ✅ Grafana Tempo 연동 (분산 추적 시각화)
+    │                  │                   │
+    │                  │                   ├─ OTLP/gRPC 프로토콜로 trace 데이터 수집
+    │                  │                   ├─ Span 단위 요청 흐름 저장 (서비스 간 호출 추적)
+    │                  │                   └─ TraceID 기반 분산 요청 전체 라이프사이클 관리
+    │                  │
+    │                  └─ metrics ▶ ✅ Prometheus Exporter로 시계열 메트릭 전송
+    │                                      │
+    │                                      ├─ HTTP Request Metrics (Latency, Throughput, Error Rate)
+    │                                      ├─ JVM Metrics (Memory, GC, Thread Pool)
+    │                                      └─ Exemplars 포함 (TraceID 메타데이터 첨부)
+    │                                      │
+    │                                      ▼
+    │                                      ✅ Prometheus TSDB → Grafana Visualization
+    │                                          ├─ Time-series 기반 집계 메트릭 차트
+    │                                          ├─ HTTP 기본 메트릭 자동 수집 (Spring Boot Actuator)
+    │                                          ├─ Latency Histogram 및 Exemplars 포함 메트릭 생성
+    │                                          └─ Exemplar Markers (◊) → TraceID 기반 Tempo 연계
+    │                                              │
+    │                                              └─▶ ✅ Metrics → Traces Correlation
+    │                                                    - 이상 메트릭 지점의 정확한 trace 조회
+    │                                                    - 집계 데이터에서 개별 요청 상세 분석으로 drill-down
+    │
+    ▼
+[Logback + MDC + JSON Encoder]
+    │
+    ├─▶ ✅ 콘솔 로그 출력 (로컬 디버깅용)
+    ├─▶ ✅ 파일 로그 저장 (JSON / TEXT, 로컬 백업용)
+    ├─▶ ✅ 날짜별 Excel 요약 로그 자동 생성 (스케줄 기반)
+    ├─▶ ✅ 필터링, 최신 로그 분석, Top5, 날짜별 로그 조회 API
+    │
+    ├─▶ ✅ Kafka Producer 전송 (JSON 로그 전송)
+    │       │
+    │       ▼
+    │  [Kafka Cluster]
+    │       └─ Topic: `app-logs` (중앙 로그 스트리밍 구축)
+    │           │
+    │           ├─▶ ✅ Logstash Consumer
+    │           │       ├─▶ ✅ Elasticsearch → Kibana (Kibana Discover / Lens 시각화 대시보드 구성)
+    │           │       │        └─ ✅ app-logs-template 인덱스 템플릿 적용 (타입·매핑 통일)
+    │           │       │
+    │           │       └─▶ ✅ Slack Webhook 전송 (에러 실시간 알림 (Error only))
+    │           └─▶ ✅ Filebeat + Logstash 백업 채널 (Fallback 용도 구성)
+
+✔️ 통합 Observability 파이프라인 (Tracing + Metrics + Logging 연동)
+  
+```
+</details>
+
 <br>
 
 ## 🛠️ Technical Stack
@@ -128,6 +187,8 @@
 <br>
 
 ## 🗺️  시스템 아키텍처
+
+
 
 ```mermaid
 
