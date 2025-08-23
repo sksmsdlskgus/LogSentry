@@ -64,17 +64,6 @@
 
 <br>
 
-## 🛠️ Technical Stack
-
-| 구분                                   | 기술                                                                                                                                                                      |
-| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ⚙ **Backend**                        | Java 17, Spring Boot 3.5 <br> Micrometer Tracing, OpenTelemetry, Logback (Console/File Appender, JSON Encoder, Kafka Appender)<br> Spring for Apache Kafka, Apache POI (Excel) |
-| 💾 **Data Pipeline / Observability** | Apache Kafka (KRaft mode), Logstash, Elasticsearch, Kibana, Prometheus, Grafana, Grafana Tempo, OpenTelemetry Collector                                                 |
-| 🔔 **Notification**                  | Slack Webhook                                                                                                                                                           |
-| 🛠 **Infra**                         | Docker, Docker Compose                                                                                                                                                  |
-
-<br>
-
 ## 🚩 프로젝트 개요
 
 > **단순 로그 적재를 넘어, MSA 환경에서 서비스 간 요청 흐름 추적과 실시간 모니터링,<br>
@@ -94,6 +83,18 @@
 > "로깅은 있는데 흐름이 안 보인다" ...
 
 <br>
+
+## 🛠️ Technical Stack
+
+| 구분                                   | 기술                                                                                                                                                                      |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ⚙ **Backend**                        | Java 17, Spring Boot 3.5 <br> Micrometer Tracing, OpenTelemetry, Logback (Console/File Appender, JSON Encoder, Kafka Appender)<br> Spring for Apache Kafka, Apache POI (Excel) |
+| 💾 **Data Pipeline / Observability** | Apache Kafka (KRaft mode), Logstash, Elasticsearch, Kibana, Prometheus, Grafana, Grafana Tempo, OpenTelemetry Collector                                                 |
+| 🔔 **Notification**                  | Slack Webhook                                                                                                                                                           |
+| 🛠 **Infra**                         | Docker, Docker Compose                                                                                                                                                  |
+
+<br>
+
 
 ## ⚙️ 구현 기술 내용
 
