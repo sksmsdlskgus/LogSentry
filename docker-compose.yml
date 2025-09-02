@@ -227,12 +227,29 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  filebeat:
+    image: elastic/filebeat:8.14.3
+    container_name: filebeat
+    user: root
+    depends_on:
+      logstash:
+        condition: service_started
+    networks:
+      - logsentry
+    volumes:
+      - ${PWD}/logs:/var/logs:ro
+      - ${PWD}/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - filebeat-data:/usr/share/filebeat/data
+    command: [ "--strict.perms=false" ]
+    restart: unless-stopped
+
 volumes:
   tempo-data:
   prometheus-data:
   grafana-data:
   kafka-data:
   es-data:
+  filebeat-data:
 
 networks:
   logsentry:
