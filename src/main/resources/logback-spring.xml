@@ -44,7 +44,7 @@
         </encoder>
     </appender>
 
-    <!-- JSON File Appender: 분석용 (ELK 연동) -->
+    <!-- JSON File Appender: Filebeat Fallback용 (Kafka 장애 대비) -->
     <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/json/app-log.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
