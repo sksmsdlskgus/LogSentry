@@ -1,0 +1,17 @@
+filebeat.inputs:
+  - type: filestream
+    id: app-json-logs
+    enabled: true
+    paths:
+      - /var/logs/json/*.json
+      - /var/logs/json/*.log
+    parsers:
+      - ndjson:
+          overwrite_keys: true
+          add_error_key: true
+    fields:
+      source: "filebeat-fallback"
+      service: "logsentry-api"
+    fields_under_root: true
+    ignore_older: 72h
+
