@@ -15,3 +15,7 @@ filebeat.inputs:
     fields_under_root: true
     ignore_older: 72h
 
+# Logstash 로 전송 (Kafka 장애 시에도 파일에서 수집)
+output.logstash:
+  hosts: ["logstash:5044"]
+
