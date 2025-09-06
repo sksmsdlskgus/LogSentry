@@ -19,3 +19,8 @@ filebeat.inputs:
 output.logstash:
   hosts: ["logstash:5044"]
 
+queue.mem:
+  events: 8192
+  flush.min_events: 512
+  flush.timeout: 5s
+
