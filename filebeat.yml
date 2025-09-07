@@ -24,3 +24,9 @@ queue.mem:
   flush.min_events: 512
   flush.timeout: 5s
 
+logging.to_files: true
+logging.files:
+  path: /usr/share/filebeat/logs
+  name: filebeat
+  keepfiles: 3
+  permissions: 0644
