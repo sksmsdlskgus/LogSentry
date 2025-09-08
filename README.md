@@ -4,9 +4,10 @@
 > 서비스 흐름 추적·성능 모니터링·로그 분석·운영 데이터 조회 기능까지 제공하는 백엔드 시스템
 
 <details>
-  <summary> <b>💡 구조 파이프라인 다이어그램 한눈에 보기</b></summary>
+  <summary> <b>📡 전체 파이프라인 다이어그램 한눈에 보기</b></summary>
   
 ```text
+
 [Spring Boot App]
     │
     ├─▶ ✅ Micrometer Tracing (자동 traceId / spanId 생성 및 전파)
@@ -45,17 +46,22 @@
     ├─▶ ✅ 필터링, 최신 로그 분석, Top5, 날짜별 로그 조회 API
     │
     ├─▶ ✅ Kafka Producer 전송 (JSON 로그 전송)
-    │       │
     │       ▼
     │  [Kafka Cluster]
-    │       └─ Topic: `app-logs` (중앙 로그 스트리밍 구축)
-    │           │
-    │           ├─▶ ✅ Logstash Consumer
-    │           │       ├─▶ ✅ Elasticsearch → Kibana (Kibana Discover / Lens 시각화 대시보드 구성)
-    │           │       │        └─ ✅ app-logs-template 인덱스 템플릿 적용 (타입·매핑 통일)
-    │           │       │
-    │           │       └─▶ ✅ Slack Webhook 전송 (에러 실시간 알림 (Error only))
-    │           └─▶ ✅ Filebeat + Logstash 백업 채널 (Fallback 용도 구성)
+    │       └─ Topic: `app-logs` (중앙 로그 스트리밍)
+    │
+    └─▶ ✅ Filebeat + Logstash 백업 채널 (Fallback 용도 구성)
+
+[Logstash Consumer]
+    ▲            ▲
+    │            │
+    │            └─ Filebeat 입력 (beats 5044)
+    └─ Kafka 입력 (app-logs consume)
+    │
+    ├─▶ ✅ Elasticsearch → Kibana (Kibana Discover / Lens 시각화 대시보드 구성)
+    │     └─ ✅ app-logs-template 인덱스 템플릿 적용 (타입·매핑 통일)
+    │
+    └─▶ ✅ Slack Webhook (Error only 실시간 알림)
 
 ✔️ 통합 Observability 파이프라인 (Tracing + Metrics + Logging 연동)
   
@@ -98,6 +104,17 @@
 
 
 ## ⚙️ 구현 기술 내용
+
+<details>
+<summary>🐳 <b>Docker Compose 기반 컨테이너 구성도</b></summary>
+
+<br>
+
+> 본 다이어그램은 **시스템 아키텍처**와는 별도로, **도커 컨테이너 배포 및 통신 관계**를 중심으로 나타낸 구성도입니다.
+
+<img width="2311" height="778" alt="docker_compose_container_topology_v2" src="https://github.com/user-attachments/assets/95ec534a-0132-4923-bdf4-66553d6233e3" />
+
+</details>
 
 <details>
 <summary>🔍 <b>Tracing</b></summary>
@@ -296,6 +313,7 @@ flowchart TB
 
   %% Logs to ELK and Slack
   A3 --> K1
+  A3 --> F1
   K1 --> L1
   L1 --> E1
   E1 --> Kb1
@@ -306,3 +324,5 @@ flowchart TB
 
 
 ```
+
+
