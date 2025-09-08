@@ -86,12 +86,13 @@
 
 ## 🛠️ Technical Stack
 
-| 구분                                   | 기술                                                                                                                                                                      |
-| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ⚙ **Backend**                        | Java 17, Spring Boot 3.5 <br> Micrometer Tracing, OpenTelemetry, Logback (Console/File Appender, JSON Encoder, Kafka Appender)<br> Spring for Apache Kafka, Apache POI (Excel) |
-| 💾 **Data Pipeline / Observability** | Apache Kafka (KRaft mode), Logstash, Elasticsearch, Kibana, Prometheus, Grafana, Grafana Tempo, OpenTelemetry Collector                                                 |
-| 🔔 **Notification**                  | Slack Webhook                                                                                                                                                           |
-| 🛠 **Infra**                         | Docker, Docker Compose                                                                                                                                                  |
+| 구분                                   | 기술                                                                                                                                |
+| ------------------------------------ |-----------------------------------------------------------------------------------------------------------------------------------|
+| ⚙ **Backend**                        | Java 17, Spring Boot 3.5, Spring Boot Actuator, Micrometer Tracing,<br> OpenTelemetry, Logback, Apache POI (Excel)                                     |
+| 💾 **Data Pipeline / Observability** | Apache Kafka (KRaft mode), Logstash, Filebeat (fallback), Elasticsearch,<br>  Kibana, Prometheus, Grafana, Grafana Tempo, OpenTelemetry Collector |
+| 🔔 **Notification**                  | Slack Webhook                                                                                                                     |
+| 🧪 **Load / Test**                   | ApacheBench (ab), Postman             
+| 🛠 **Infra**                         | Docker, Docker Compose                                                                                                            |
 
 <br>
 
