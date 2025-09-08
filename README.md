@@ -212,7 +212,7 @@ flowchart TB
   subgraph App[Spring Boot Application 8081]
     A1[Micrometer Tracing<br>traceId spanId propagation]
     A2[Micrometer Metrics via OTLP<br>JVM HTTP Exemplars]
-    A3[Logback MDC JSON<br>Console File Kafka]
+    A3[Logback MDC <br> JSON Console File Kafka]
   end
   class A1,A2,A3 app
 
@@ -273,7 +273,7 @@ flowchart TB
   end
   class S1 slack
 
-  subgraph Filebeat[Filebeat and Logstash backup]
+  subgraph Filebeat[Filebeat Fallback logs]
     F1[Backup channel]
   end
   class F1 filebeat
@@ -300,7 +300,9 @@ flowchart TB
   L1 --> E1
   E1 --> Kb1
   L1 --> S1
-  K1 --> F1
+
+  %% Backup channel 수정
+  F1 --> L1
 
 
 ```
