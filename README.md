@@ -105,7 +105,7 @@
 
 ## ⚙️ 구현 기술 내용
 
-<details>
+<details open>
 <summary>🐳 <b>Docker Compose 기반 컨테이너 구성도</b></summary>
 
 <br>
