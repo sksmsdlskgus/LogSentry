@@ -15,7 +15,7 @@ public class BServiceClient { // WebClient로 B 서비스 호출
     @Observed(name = "bServiceClient.callB", contextualName = "WebClient → B")
     public Mono<String> callB() {
         return webClient.get()
-                .uri("http://localhost:8081/b/hello")
+                .uri("/b/hello")     // 상대경로로 전환 -> service-b 8082서버 호출
                 .retrieve()
                 .bodyToMono(String.class);
     }
