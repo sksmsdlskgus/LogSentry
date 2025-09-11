@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: service-b
+server:
+  port: 8082
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+management:
+  tracing:
+    enabled: true
+    propagation:
+      type: w3c
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces
