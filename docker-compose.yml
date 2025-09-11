@@ -1,5 +1,5 @@
 services:
-  # Spring Boot Application
+  # 기존 service-a
   logsentry-api:
     build: .
     container_name: logsentry-api
@@ -9,12 +9,15 @@ services:
       - .env
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - B_BASE_URL=${B_BASE_URL}
       - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS}
     depends_on:
       kafka:
         condition: service_healthy
       kafka-init:
         condition: service_completed_successfully
+      service-b:
+        condition: service_started
       otel-collector:
         condition: service_started
     networks:
@@ -28,6 +31,26 @@ services:
       timeout: 10s
       retries: 10
       start_period: 150s
+
+  # service-b 프로젝트
+  service-b:
+    build:
+      context: ./Logsentry2
+      dockerfile: Dockerfile
+    container_name: service-b
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+    networks:
+      - logsentry
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   # OpenTelemetry Collector
   otel-collector:
